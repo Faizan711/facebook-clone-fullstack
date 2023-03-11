@@ -1,8 +1,11 @@
 import React from 'react'
 import './Login.css'
 import { auth, provider, signInWithPopup, GoogleAuthProvider} from './firebase'
+import { actionTypes } from './reducer'
+import { useStateValue } from './StateProvider'
 
 function Login() {
+    const [state, dispatch] = useStateValue();
     const signIn = () => {
         signInWithPopup(auth, provider)
         .then((result) => {
@@ -11,6 +14,10 @@ function Login() {
             const token = credential.accessToken;
             // The signed-in user info.
             const user = result.user;
+            dispatch({
+                type: actionTypes.SET_USER,
+                user: user,
+            })
             // IdP data available using getAdditionalUserInfo(result)
             // ...
         }).catch((error) => {
