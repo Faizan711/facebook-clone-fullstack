@@ -3,13 +3,57 @@ import "./Feed.css"
 import StoryReel from './StoryReel'
 import MessageSender from './MessageSender'
 import Post from './Post'
+import { useState, useEffect } from 'react'
+import db from './firebase'
+import { collection, getDocs } from 'firebase/firestore/lite'
 
 function Feed() {
+  const [posts, setPosts] = useState([]);
+
+
+  const fetchPost = async () => {
+       
+    await getDocs(collection(db, "posts"))
+        .then((querySnapshot)=>{               
+            const newData = querySnapshot.docs
+                .map((doc) => ({ id:doc.id, data: doc.data() }));
+            setPosts(newData);   
+            console.log(newData);             
+        })
+   
+};
+
+useEffect(()=>{
+    fetchPost();
+}, []);
+
+
+  // useEffect(() => {
+  //   db.collection("posts").onSnapshot((snapshot) => {
+  //     setPosts(snapshot.docs.map((doc) => ({id: doc.id, data: doc.data()})));
+  //     console.log(posts);
+  //   });
+  // }, []);
+  
+  
   return (
     <div className='feed'>
         <StoryReel/>
         <MessageSender />
-        <Post 
+        
+        {posts.map((post) => (
+          <Post 
+            key={post.id}
+            profilePic={post.data.profilePic}
+            message={post.data.message}
+            timestamp={post.data.timestamp}
+            username={post.data.username}
+            image={post.data.image}
+          />
+        ))}
+
+        
+        {/* <Post 
         profilePic="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSshW2NpetcJKgpq6jaRpnFR2uxuGAXWEN8KQ&usqp=CAU"
         message="Wow"
         timestamp="This is a Timestamp"
@@ -20,7 +64,7 @@ function Feed() {
         message="Wow"
         timestamp="This is a Timestamp"
         username="Faizzy"/>
-        <Post />
+        <Post /> */}
     </div>
   )
 }
