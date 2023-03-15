@@ -5,15 +5,16 @@ import MessageSender from './MessageSender'
 import Post from './Post'
 import { useState, useEffect } from 'react'
 import db from './firebase'
-import { collection, getDocs } from 'firebase/firestore/lite'
+// import { onSnapshot} from 'firebase/firestore/'
+import { collection, getDocs} from 'firebase/firestore/lite'
 
 function Feed() {
   const [posts, setPosts] = useState([]);
 
 
-  const fetchPost = async () => {
+  const fetchPost =  () => {
        
-    await getDocs(collection(db, "posts"))
+     getDocs(collection(db, "posts"))
         .then((querySnapshot)=>{               
             const newData = querySnapshot.docs
                 .map((doc) => ({ id:doc.id, data: doc.data() }));
@@ -23,17 +24,10 @@ function Feed() {
    
 };
 
-useEffect(()=>{
-    fetchPost();
-}, []);
 
-
-  // useEffect(() => {
-  //   db.collection("posts").onSnapshot((snapshot) => {
-  //     setPosts(snapshot.docs.map((doc) => ({id: doc.id, data: doc.data()})));
-  //     console.log(posts);
-  //   });
-  // }, []);
+  useEffect(() => {
+   fetchPost();
+  }, [posts]);
   
   
   return (

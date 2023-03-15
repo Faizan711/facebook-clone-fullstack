@@ -6,6 +6,9 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import { useStateValue } from './StateProvider';
+import db from './firebase';
+import { FirebaseApp } from 'firebase/app';
+import { collection, addDoc, serverTimestamp, Firestore  } from 'firebase/firestore/lite';
 
 function MessageSender() {
     const [{user}, dispatch] = useStateValue();
@@ -14,6 +17,20 @@ function MessageSender() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        try {
+            const docRef = addDoc(collection(db, "posts"), {
+              message: input,
+              timestamp: serverTimestamp(),  
+              profilePic: user.photoURL,
+              username: user.displayName,
+              image: imageUrl,
+            });
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+
         setImageUrl("");
         setInput("");
 

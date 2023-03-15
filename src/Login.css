@@ -5,12 +5,15 @@
 }
 .login > button{
     width: 300px;
-    background-color: #c6cacf;
+    background-color: #2e81f4;
     color: #eff2f5;
     font-weight: 800;
+    border-radius: 20px;
+    padding: 8px;
 }
 .login > button:hover{
-    background-color: #2e81f4;
+    
+    background-color: #c6cacf;
     color: white;
 }
 .login > div > img{
